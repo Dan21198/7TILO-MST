@@ -1,5 +1,7 @@
 package osu;
 
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
         Graph graph = new Graph();
@@ -21,14 +23,18 @@ public class Main {
                 "(Godric's Hollow)-[3]-(LV 426)", "(LV 426)-[7]-(Mos Eisley)", "(LV 426)-[3]-(Godric's Hollow)"
         };
 
-//        for (String edge : data) {
-//            String[] parts = edge.split("\\)-\\[|]-\\(");
-//            String from = parts[0].substring(1);
-//            int weight = Integer.parseInt(parts[1]);
-//            String to = parts[2].substring(0, parts[2].length() - 1);
-//            graph.addEdge(from, to, weight);
-//        }
+        for (String edge : data) {
+            String[] parts = edge.split("\\)-\\[|]-\\(");
+            String from = parts[0].substring(1);
+            int weight = Integer.parseInt(parts[1]);
+            String to = parts[2].substring(0, parts[2].length() - 1);
+            graph.addEdge(from, to, weight);
+        }
 
-        //graph.printGraph();
+        KruskalMST kruskal = new KruskalMST();
+        List<Edge> mst = kruskal.findMST(graph);
+
+        Scheduler scheduler = new Scheduler();
+        scheduler.scheduleWork(mst);
     }
 }
