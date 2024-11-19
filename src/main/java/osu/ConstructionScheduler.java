@@ -64,21 +64,22 @@ public class ConstructionScheduler {
                 totalDays++;
                 totalKm += kmLaid;
 
-                String log = "[Day " + totalDays + "] " + edge.from.getName() + " -> " + edge.to.getName()
+                // Format output to match the desired format
+                String log = "[d_" + totalDays + "] " + edge.from.getName() + " -> " + edge.to.getName()
                         + ": " + hoursWorked + " hours, " + kmLaid + " km";
                 workLog.add(log);
 
                 if (remainingWork > 0) {
-                    dailyHours = 8; // Reset hours for next day
+                    dailyHours = 8; // Reset hours for the next day
                 }
             }
 
-            // Add 1 hour for travel to the next non-adjacent city
+            // Add 1 day for travel to the next city if needed
             totalDays++;
-            workLog.add("[Day " + totalDays + "] Travel: 1 hour (to next city)");
+            workLog.add("[d_" + totalDays + "] Travel: 1 hour (to next city)");
         }
-
         workLog.forEach(System.out::println);
+
         System.out.println("-------------------------------------");
         System.out.println("Result: " + totalDays + " days, " + totalKm + " km");
     }
