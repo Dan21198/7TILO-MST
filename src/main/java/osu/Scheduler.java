@@ -46,7 +46,6 @@ public class Scheduler {
                 int hoursWorked = Math.min(totalWorkTime, dailyHours);
                 int kmLaid = hoursWorked;
 
-                // If we added travel time earlier, adjust the hours and kilometers
                 if (travelTime > 0) {
                     hoursWorked++;
                     travelTime = 0;
@@ -61,16 +60,12 @@ public class Scheduler {
                 String log = "[d_" + totalDays + "] " + edge.getFrom().getName() + " -> " + edge.getTo().getName()
                         + ": " + hoursWorked + " hours, " + kmLaid + " km";
                 workLog.add(log);
-
-                // Reset hours for the next day
-                if (totalWorkTime > 0) {
-                    dailyHours = 8;
-                }
+                System.out.println(log);
             }
 
-            // Mark the nodes as visited after processing
             visitedNodes.add(edge.getFrom());
-            visitedNodes.add(edge.getTo());  // Mark the destination node as visited after processing
+            visitedNodes.add(edge.getTo());
+            System.out.println(Arrays.toString(visitedNodes.stream().map(Node::getName).toArray(String[]::new)));
         }
 
         printWorkLogs();
