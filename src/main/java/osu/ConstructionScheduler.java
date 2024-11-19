@@ -3,6 +3,48 @@ package osu;
 import java.util.*;
 
 public class ConstructionScheduler {
+
+    static class Node {
+        String name;
+        Node(String name) {
+            this.name = name;
+        }
+        String getName() {
+            return this.name;
+        }
+    }
+
+    static class Edge {
+        Node from;
+        Node to;
+        int length;
+
+        Edge(Node from, Node to, int length) {
+            this.from = from;
+            this.to = to;
+            this.length = length;
+        }
+    }
+
+    static class Graph {
+        private Map<String, Node> nodes = new HashMap<>();
+        private List<Edge> edges = new ArrayList<>();
+
+        public void addEdge(String from, String to, int length) {
+            Node fromNode = nodes.computeIfAbsent(from, Node::new);
+            Node toNode = nodes.computeIfAbsent(to, Node::new);
+            edges.add(new Edge(fromNode, toNode, length));
+        }
+
+        public List<Node> getNodes() {
+            return new ArrayList<>(nodes.values());
+        }
+
+        public List<Edge> getEdges() {
+            return edges;
+        }
+    }
+
     static class DisjointSet {
         private Map<Node, Node> parent = new HashMap<>();
 
@@ -30,30 +72,54 @@ public class ConstructionScheduler {
         List<Edge> edges = new ArrayList<>(graph.getEdges());
         edges.sort(Comparator.comparingInt(e -> e.length));
 
+        List<Edge> mst = new ArrayList<>();
         DisjointSet disjointSet = new DisjointSet();
-        for (Edge edge : edges) {
-            disjointSet.makeSet(edge.from);
-            disjointSet.makeSet(edge.to);
+
+        for (Node node : graph.getNodes()) {
+            disjointSet.makeSet(node);
         }
 
-        List<Edge> mst = new ArrayList<>();
         for (Edge edge : edges) {
-            if (disjointSet.find(edge.from) != disjointSet.find(edge.to)) {
+            Node root1 = disjointSet.find(edge.from);
+            Node root2 = disjointSet.find(edge.to);
+            if (root1 != root2) {
                 mst.add(edge);
                 disjointSet.union(edge.from, edge.to);
             }
         }
+
         return mst;
     }
 
     public static void scheduleWork(List<Edge> mst) {
         int totalKm = 0, totalDays = 0;
         List<String> workLog = new ArrayList<>();
+        Set<String> visitedEdges = new HashSet<>();
+        Set<Node> visitedNodes = new HashSet<>(); // Track nodes that have been visited
 
         for (Edge edge : mst) {
+            // Skip edges where the destination node has been visited
+            if (visitedNodes.contains(edge.to)) {
+                continue;
+            }
+
+            String edgeKey = edge.from.getName() + "-" + edge.to.getName();
+            String reverseEdgeKey = edge.to.getName() + "-" + edge.from.getName();
+
+            // Ensure that an edge (in either direction) is processed only once
+            if (visitedEdges.contains(edgeKey) || visitedEdges.contains(reverseEdgeKey)) {
+                continue;
+            }
+
+            visitedEdges.add(edgeKey); // Mark the edge as visited
+
+            // Mark the destination node as visited
+            visitedNodes.add(edge.to);
+
             int remainingWork = edge.length;
             int dailyHours = 8;
 
+            // Work on the edge in daily chunks
             while (remainingWork > 0) {
                 int hoursWorked = Math.min(remainingWork, dailyHours);
                 int kmLaid = hoursWorked;
@@ -64,7 +130,6 @@ public class ConstructionScheduler {
                 totalDays++;
                 totalKm += kmLaid;
 
-                // Format output to match the desired format
                 String log = "[d_" + totalDays + "] " + edge.from.getName() + " -> " + edge.to.getName()
                         + ": " + hoursWorked + " hours, " + kmLaid + " km";
                 workLog.add(log);
@@ -74,15 +139,23 @@ public class ConstructionScheduler {
                 }
             }
 
-            // Add 1 day for travel to the next city if needed
-            totalDays++;
-            workLog.add("[d_" + totalDays + "] Travel: 1 hour (to next city)");
+            // Only log travel if this is the first time encountering this pair of cities
+            if (!visitedNodes.contains(edge.from)) {
+                totalDays++;
+                workLog.add("[d_" + totalDays + "] Travel: 1 hour (to next city)");
+                visitedNodes.add(edge.from);
+            }
         }
+
+        // Print work logs
         workLog.forEach(System.out::println);
 
+        // Summary
         System.out.println("-------------------------------------");
         System.out.println("Result: " + totalDays + " days, " + totalKm + " km");
     }
+
+
 
     public static void main(String[] args) {
         String[] data = {
@@ -101,7 +174,6 @@ public class ConstructionScheduler {
                 "(Godric's Hollow)-[1]-(Mordheim)", "(Godric's Hollow)-[15]-(Gondolin)",
                 "(Godric's Hollow)-[3]-(LV 426)", "(LV 426)-[7]-(Mos Eisley)", "(LV 426)-[3]-(Godric's Hollow)"
         };
-
 
         Graph graph = new Graph();
 
