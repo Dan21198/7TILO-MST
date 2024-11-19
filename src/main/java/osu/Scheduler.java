@@ -26,52 +26,55 @@ public class Scheduler {
 
             visitedEdges.add(edgeKey); // Mark this edge as visited
 
-            // Mark the destination node as visited
-            visitedNodes.add(edge.getTo());
-
             int remainingWork = edge.getLength();
             int dailyHours = 8;
+            int totalWorkTime = remainingWork;
 
-            // Add 1 hour of travel time for moving to the new city
-            int travelTime = 1;
-            int totalWorkTime = remainingWork + travelTime;  // Total time including travel
+            // Initialize travel time; will only be added the first time a node is visited
+            boolean isFirstVisit = !visitedNodes.contains(edge.getFrom());
 
-            // Work on the edge in daily chunks, including the travel time
+            int travelTime = 0;
+
+            // Add travel time only the first time we visit the source node
+            if (isFirstVisit) {
+                travelTime = 1;  // 1 hour for travel
+                totalWorkTime += travelTime; // Add travel time to total work time
+            }
+
+            // Work on the edge in daily chunks, excluding the travel time in the daily work hours
             while (totalWorkTime > 0) {
                 int hoursWorked = Math.min(totalWorkTime, dailyHours);
                 int kmLaid = hoursWorked;
 
-                // Add 1 hour of travel time the first time we visit this node
-                if (!visitedNodes.contains(edge.getFrom())) {
-                    hoursWorked++; // Add 1 hour for travel
-                    travelTime = 0; // Only add travel time once
+                // If we added travel time earlier, adjust the hours and kilometers
+                if (travelTime > 0) {
+                    hoursWorked++;
+                    travelTime = 0;
                 }
 
-                dailyHours -= hoursWorked;
                 totalWorkTime -= hoursWorked;
 
                 totalDays++;
                 totalKm += kmLaid;
 
-                // Log the work and travel combined
+                // Log the work (travel time not included in hours worked)
                 String log = "[d_" + totalDays + "] " + edge.getFrom().getName() + " -> " + edge.getTo().getName()
                         + ": " + hoursWorked + " hours, " + kmLaid + " km";
-
                 workLog.add(log);
 
+                // Reset hours for the next day
                 if (totalWorkTime > 0) {
-                    dailyHours = 8; // Reset hours for the next day
+                    dailyHours = 8;
                 }
             }
 
+            // Mark the nodes as visited after processing
             visitedNodes.add(edge.getFrom());
+            visitedNodes.add(edge.getTo());  // Mark the destination node as visited after processing
         }
 
         printWorkLogs();
     }
-
-
-
 
     private void printWorkLogs() {
         workLog.forEach(System.out::println);
