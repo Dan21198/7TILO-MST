@@ -34,13 +34,7 @@ public class Main {
         KruskalMST kruskal = new KruskalMST();
         List<Edge> mst = kruskal.findMST(graph);
 
-        System.out.println("Minimum Spanning Tree (MST):");
-        for (Edge edge : mst) {
-            System.out.println(edge.getFrom().getName() + " - " + edge.getTo().getName() + ": " + edge.getLength() + " km");
-        }
-
-
-        Scheduler scheduler = new Scheduler();
-        scheduler.scheduleWork(mst);
+        WorkScheduler scheduler = new WorkScheduler();
+        scheduler.scheduleAndPrintWork(mst);
     }
 }
