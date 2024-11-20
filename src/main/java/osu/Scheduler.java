@@ -60,12 +60,10 @@ public class Scheduler {
                 String log = "[d_" + totalDays + "] " + edge.getFrom().getName() + " -> " + edge.getTo().getName()
                         + ": " + hoursWorked + " hours, " + kmLaid + " km";
                 workLog.add(log);
-                System.out.println(log);
             }
 
             visitedNodes.add(edge.getFrom());
             visitedNodes.add(edge.getTo());
-            System.out.println(Arrays.toString(visitedNodes.stream().map(Node::getName).toArray(String[]::new)));
         }
 
         printWorkLogs();
