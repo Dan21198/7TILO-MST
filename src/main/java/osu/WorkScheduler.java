@@ -30,9 +30,6 @@ public class WorkScheduler {
             travelTime = 1; // Add 1 hour for travel
         }
 
-        //System.out.println("visitedNodes: " + visitedNodes);
-        //System.out.println("travelTime: " + travelTime);
-
         int remainingWork = edge.getLength();
         int totalWorkTime = remainingWork + travelTime;
 
@@ -41,7 +38,6 @@ public class WorkScheduler {
 
             // Include travel time only on the first day
             if (travelTime > 0) {
-                hoursWorked++; // Account for travel time
                 travelTime = 0;
             }
 
