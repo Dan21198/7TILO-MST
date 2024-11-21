@@ -42,12 +42,15 @@ public class WorkScheduler {
         while (totalWorkTime > 0) {
             int hoursWorked = Math.min(totalWorkTime, dailyHours);
 
-            if (travelTime > 0) {
-                travelTime = 0;
-            }
             totalWorkTime -= hoursWorked;
 
-            int kmLaid = Math.min(hoursWorked, remainingWork);
+            int kmLaid = Math.min(remainingWork, hoursWorked);
+
+            if (travelTime > 0) {
+                travelTime = 0;
+                kmLaid -= (remainingWork > 8) ? 1 : 0;
+            }
+
             totalKm += kmLaid;
             remainingWork -= kmLaid;
 
