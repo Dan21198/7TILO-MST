@@ -32,18 +32,22 @@ public class Main {
         }
 
         KruskalMST kruskal = new KruskalMST();
-        List<Edge> mst = kruskal.findMST(graph);
+        List<Edge> mstKruskal = kruskal.findMST(graph);
 
         PrimMST prim = new PrimMST();
-        List<Edge> mst2 = prim.findMST(graph);
+        List<Edge> mstPrim = prim.findMST(graph);
+
+        BoruvkaMST boruvka = new BoruvkaMST();
+        List<Edge> mstBoruvka = boruvka.findMST(graph);
 
         WorkScheduler scheduler = new WorkScheduler();
 
-        scheduler.scheduleAndPrintWork(mst);
+        scheduler.scheduleAndPrintWork(mstKruskal);
         scheduler.reset();
         System.out.println();
-        scheduler.scheduleAndPrintWork(mst2);
+        scheduler.scheduleAndPrintWork(mstPrim);
         scheduler.reset();
         System.out.println();
+        scheduler.scheduleAndPrintWork(mstBoruvka);
     }
 }
