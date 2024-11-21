@@ -62,4 +62,12 @@ public class WorkScheduler {
         visitedNodes.add(edge.getFrom().getName());
         visitedNodes.add(edge.getTo().getName());
     }
+
+    public int getTotalDays() {
+        return totalDays;
+    }
+
+    public int getTotalKm() {
+        return totalKm;
+    }
 }

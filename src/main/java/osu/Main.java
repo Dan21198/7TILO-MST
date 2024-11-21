@@ -42,12 +42,40 @@ public class Main {
 
         WorkScheduler scheduler = new WorkScheduler();
 
+        System.out.println("Kruskal:");
         scheduler.scheduleAndPrintWork(mstKruskal);
+        int daysKruskal = scheduler.getTotalDays();
+        int kmKruskal = scheduler.getTotalKm();
         scheduler.reset();
         System.out.println();
+
+        System.out.println("Prim:");
         scheduler.scheduleAndPrintWork(mstPrim);
+        int daysPrim = scheduler.getTotalDays();
+        int kmPrim = scheduler.getTotalKm();
         scheduler.reset();
         System.out.println();
+
+        System.out.println("Borůvka:");
         scheduler.scheduleAndPrintWork(mstBoruvka);
+        int daysBoruvka = scheduler.getTotalDays();
+        int kmBoruvka = scheduler.getTotalKm();
+        scheduler.reset();
+        System.out.println();
+
+        printComparison(daysKruskal, kmKruskal, daysPrim, kmPrim, daysBoruvka, kmBoruvka);
+    }
+
+    private static void printComparison(int daysKruskal, int kmKruskal, int daysPrim, int kmPrim,
+                                        int daysBoruvka, int kmBoruvka) {
+        System.out.println("========================================");
+        System.out.println("Srovnání algoritmů pro hledání MST:");
+        System.out.println("----------------------------------------");
+        System.out.printf("Algoritmus   | Počet dnů | Celková vzdálenost%n");
+        System.out.println("----------------------------------------");
+        System.out.printf("Kruskal      | %-10d | %-16d%n", daysKruskal, kmKruskal);
+        System.out.printf("Prim         | %-10d | %-16d%n", daysPrim, kmPrim);
+        System.out.printf("Borůvka      | %-10d | %-16d%n", daysBoruvka, kmBoruvka);
+        System.out.println("========================================");
     }
 }
