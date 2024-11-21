@@ -25,9 +25,8 @@ public class WorkScheduler {
         int dailyHours = 8;
         int travelTime = 0;
 
-        // Add travel time only if both nodes are unvisited
         if (!visitedNodes.contains(edge.getFrom().getName()) && !visitedNodes.contains(edge.getTo().getName())) {
-            travelTime = 1; // Add 1 hour for travel
+            travelTime = 1;
         }
 
         int remainingWork = edge.getLength();
@@ -36,19 +35,15 @@ public class WorkScheduler {
         while (totalWorkTime > 0) {
             int hoursWorked = Math.min(totalWorkTime, dailyHours);
 
-            // Include travel time only on the first day
             if (travelTime > 0) {
                 travelTime = 0;
             }
-
             totalWorkTime -= hoursWorked;
 
-            // Calculate kilometers laid
             int kmLaid = Math.min(hoursWorked, remainingWork);
             totalKm += kmLaid;
             remainingWork -= kmLaid;
 
-            // Log work for the day
             System.out.println("[d_" + dayCounter + "] " + edge.getFrom().getName() + " -> "
                     + edge.getTo().getName() + ": "
                     + hoursWorked + " hours, "

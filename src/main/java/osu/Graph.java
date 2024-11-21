@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Graph {
     private final Map<String, Node> nodes = new HashMap<>();
-    private final Set<Edge> edges = new HashSet<>();  // Use a set to automatically avoid duplicate edges
+    private final Set<Edge> edges = new HashSet<>();
 
     public void addEdge(String from, String to, int length) {
         Node fromNode = nodes.computeIfAbsent(from, Node::new);
