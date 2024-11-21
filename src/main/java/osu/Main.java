@@ -34,7 +34,16 @@ public class Main {
         KruskalMST kruskal = new KruskalMST();
         List<Edge> mst = kruskal.findMST(graph);
 
+        PrimMST prim = new PrimMST();
+        List<Edge> mst2 = prim.findMST(graph);
+
         WorkScheduler scheduler = new WorkScheduler();
+
         scheduler.scheduleAndPrintWork(mst);
+        scheduler.reset();
+        System.out.println();
+        scheduler.scheduleAndPrintWork(mst2);
+        scheduler.reset();
+        System.out.println();
     }
 }

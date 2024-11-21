@@ -10,6 +10,13 @@ public class WorkScheduler {
     private int totalKm = 0;
     private final Set<String> visitedNodes = new HashSet<>();
 
+    public void reset() {
+        dayCounter = 1;
+        totalDays = 0;
+        totalKm = 0;
+        visitedNodes.clear();
+    }
+
     public void scheduleAndPrintWork(List<Edge> mst) {
         System.out.println("Minimum Spanning Tree (MST):");
 
